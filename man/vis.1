@@ -1,0 +1,309 @@
+.Dd October 20, 2026
+.Dt VIS 1
+.Os PUtils
+.Sh NAME
+.Nm vis ,
+.Nm visual
+.Nd visual SSH terminal with desktop-like experience
+.Sh SYNOPSIS
+.Nm
+.Op Fl s
+.Op Fl h
+.Op Fl r
+.Op Fl c Ar config
+.Nm visual
+.Op Ar same options
+.Sh DESCRIPTION
+.Nm
+and
+.Nm visual
+are the same command.
+.Nm
+connects to a remote SSH server and presents a full-screen terminal
+interface that resembles a desktop environment.
+It supports split panes, a file manager for drag-and-drop-like file
+transfers, multiple tabs, and seamless SFTP integration.
+
+When invoked without arguments,
+.Nm
+reads its configuration from
+.Pa ~/.config/vis/config
+and connects to the default host specified there.
+When invoked with piped input, it treats the input as a full SSH command
+and connects accordingly.
+
+.Pp
+The options are:
+.Bl -tag -width Ds
+.It Fl s
+Stop any running
+.Nm
+process and convert the session to a standard SSH workflow.
+This sends a cleanup signal to the running instance and exits.
+.It Fl h
+Clean
+.Nm Ns 's
+own commands from the shell history before exiting.
+.It Fl r
+Read-only mode.
+Disables all write operations including file uploads, command execution
+that modifies state, and configuration changes.
+.It Fl c Ar config
+Use an alternate configuration file instead of the default.
+.El
+.Sh CONFIGURATION
+.Nm
+looks for its configuration file at
+.Pa ~/.config/vis/config .
+If it does not exist, a default configuration is created on first run.
+The configuration file uses a simple
+.Ar key Ns = Ns Ar value
+format.
+
+.Pp
+Key configuration sections:
+
+.Ss SSH Connection
+.Bl -tag -width "identity_file"
+.It default_host
+The default SSH host to connect to (e.g., "user@host").
+.It default_port
+SSH port (default: 22).
+.It auth_method
+Authentication method: "key", "password", or "agent".
+.It identity_file
+Path to SSH private key (default: ~/.ssh/id_ed25519).
+.It timeout
+Connection timeout in seconds (default: 30).
+.It keepalive_interval
+SSH keepalive interval in seconds (default: 60).
+.El
+
+.Ss Terminal
+.Bl -tag -width "scrollback_lines"
+.It term_type
+Terminal type to request (default: "xterm-256color").
+.It term_cols, term_rows
+Default terminal dimensions (default: 120x40).
+.It scrollback_lines
+Scrollback buffer size (default: 10000).
+.It theme
+Color theme name (default: "default").
+.It show_status_bar, show_tab_bar
+Show status and tab bars (default: true).
+.El
+
+.Ss Desktop Features
+.Bl -tag -width "file_manager_position"
+.It enable_file_manager
+Enable the file manager pane (default: true).
+.It file_manager_width
+Width of file manager in columns (default: 30).
+.It file_manager_position
+Position: "left" or "right" (default: "left").
+.It auto_refresh_file_manager
+Auto-refresh directory listing (default: true).
+.It refresh_interval
+Refresh interval in seconds (default: 5).
+.It enable_sftp
+Enable SFTP file transfers (default: true).
+.It local_download_dir
+Local directory for downloads (default: ~/Downloads/vis).
+.It remote_upload_dir
+Remote directory for uploads (default: ~).
+.It max_transfer_size
+Maximum file transfer size in bytes (default: 100MB).
+.El
+
+.Ss Behavior
+.Bl -tag -width "reconnect_attempts"
+.It read_only_mode
+Start in read-only mode (default: false).
+.It clean_history_on_exit
+Clean shell history on exit (default: false).
+.It confirm_close
+Prompt before closing (default: true).
+.It reconnect_on_disconnect
+Auto-reconnect on disconnect (default: false).
+.It reconnect_attempts
+Number of reconnect attempts (default: 3).
+.It reconnect_delay
+Delay between reconnects in seconds (default: 5).
+.It log_level
+Log level: "debug", "info", "warn", "error" (default: "info").
+.It log_file
+Log file path (default: ~/.local/share/vis/vis.log).
+.El
+
+.Ss Key Bindings
+All key bindings are configurable.
+Defaults use vim-style bindings:
+.Bl -tag -width "key_toggle_file_manager"
+.It key_quit
+Quit (default: Ctrl+q).
+.It key_new_tab
+New tab (default: Ctrl+t).
+.It key_close_tab
+Close tab (default: Ctrl+w).
+.It key_next_tab
+Next tab (default: Ctrl+Tab).
+.It key_prev_tab
+Previous tab (default: Ctrl+Shift+Tab).
+.It key_split_horizontal
+Split pane horizontally (default: Ctrl+h).
+.It key_split_vertical
+Split pane vertically (default: Ctrl+v).
+.It key_toggle_file_manager
+Toggle file manager (default: Ctrl+f).
+.It key_command_mode
+Enter command mode (default: :).
+.It key_search
+Enter search mode (default: /).
+.El
+.Sh USAGE
+.Ss Interactive Mode
+Run
+.Nm
+without arguments to start an interactive session with the configured
+default host.
+The interface provides:
+.Bl -bullet
+.It
+Multiple tabs (Ctrl+t, Ctrl+w)
+.It
+Split panes (Ctrl+h, Ctrl+v)
+.It
+File manager pane (Ctrl+f) for browsing and transferring files
+.It
+Command mode (:) for internal commands
+.It
+Search mode (/) for searching scrollback
+.El
+
+.Ss Piped Mode
+Pipe an SSH command to
+.Nm
+to connect using that command:
+.Bd -literal -offset indent
+$ echo user@example.com | vis
+.Ed
+This is useful for one-off connections or when the command is generated
+by a script.
+
+.Ss File Transfers
+In the file manager (Ctrl+f):
+.Bl -bullet
+.It
+Navigate with arrow keys, Enter to enter directories
+.It
+Space to select files
+.It
+d to download selected files to local machine
+.It
+u to upload files from local machine
+.It
+n to create new directory
+.It
+r to rename selected file
+.It
+Delete to remove selected file
+.El
+
+.Ss Read-Only Mode
+With
+.Fl r
+or
+.Cm set readonly
+in command mode, all write operations are disabled.
+Useful for safe inspection of remote systems.
+
+.Sh COMMANDS
+In command mode (press :), the following commands are available:
+.Bl -tag -width "disconnect"
+.It Cm connect Ar host
+Connect to a different host.
+.It Cm disconnect
+Disconnect from current host.
+.It Cm tab new
+Create new tab.
+.It Cm tab close
+Close current tab.
+.It Cm tab next, Cm tab prev
+Switch tabs.
+.It Cm split h, Cm split v
+Split pane horizontally or vertically.
+.It Cm fm toggle
+Toggle file manager.
+.It Cm fm refresh
+Refresh file manager.
+.It Cm set readonly, Cm set noreadonly
+Toggle read-only mode.
+.It Cm set theme Ar name
+Change color theme.
+.It Cm reload
+Reload configuration.
+.It Cm quit
+Exit
+.Nm .
+.El
+.Sh FILES
+.Bl -tag -width Ds
+.It Pa ~/.config/vis/config
+Main configuration file.
+.It Pa ~/.local/share/vis/vis.log
+Log file (if enabled).
+.It Pa ~/Downloads/vis/
+Default local download directory.
+.El
+.Sh ENVIRONMENT
+.Bl -tag -width XDG_CONFIG_HOME
+.It Ev XDG_CONFIG_HOME
+If set, configuration is read from
+.Pa $XDG_CONFIG_HOME/vis/config
+instead of
+.Pa ~/.config/vis/config .
+.It Ev HOME
+Used to expand tilde in paths.
+.It Ev TERM
+Terminal type, overridden by configuration.
+.It Ev SSH_AUTH_SOCK
+Used for SSH agent authentication.
+.El
+.Sh EXIT STATUS
+.Nm
+exits 0 on success, 1 on configuration or connection error,
+2 on authentication failure, 3 on protocol error.
+.Sh EXAMPLES
+Connect to the default university server:
+.Bd -literal -offset indent
+$ vis
+.Ed
+.Pp
+Connect using a piped SSH command:
+.Bd -literal -offset indent
+$ ssh user@server.example.com | vis
+.Ed
+.Pp
+Start in read-only mode:
+.Bd -literal -offset indent
+$ vis -r
+.Ed
+.Pp
+Stop a running instance and clean history:
+.Bd -literal -offset indent
+$ vis -s -h
+.Ed
+.Pp
+Use alternate config file:
+.Bd -literal -offset indent
+$ vis -c ~/my-vis-config
+.Ed
+.Sh SEE ALSO
+.Xr ssh 1 ,
+.Xr sftp 1 ,
+.Xr ssh_config 5 ,
+.Xr SDL2 3 ,
+.Xr libvterm 3
+.Sh AUTHORS
+Part of PUtils, by
+.An Pr1nted .

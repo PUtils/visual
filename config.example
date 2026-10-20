@@ -1,0 +1,65 @@
+# vis - Visual SSH Terminal Configuration
+# Place this file at ~/.config/vis/config
+
+# Default SSH connection (used when running 'vis' without arguments)
+# Format: user@host[:port] or ssh command
+default_host = "user@example.com"
+default_port = 22
+
+# Authentication
+# Options: "key", "password", "agent"
+auth_method = "key"
+identity_file = "~/.ssh/id_ed25519"
+# password = ""  # Not recommended, use SSH keys or agent
+
+# Terminal settings
+term_type = "xterm-256color"
+term_cols = 120
+term_rows = 40
+scrollback_lines = 10000
+
+# Visual settings
+theme = "default"
+show_status_bar = true
+show_tab_bar = true
+status_bar_format = "[{host}] {user}@{host}:{pwd} | {mode} | {time}"
+
+# Desktop-like features
+enable_file_manager = true
+file_manager_width = 30
+file_manager_position = "left"  # left, right
+auto_refresh_file_manager = true
+refresh_interval = 5
+
+# File transfer
+enable_sftp = true
+local_download_dir = "~/Downloads/vis"
+remote_upload_dir = "~"
+max_transfer_size = 104857600  # 100MB
+
+# Behavior
+read_only_mode = false
+clean_history_on_exit = false
+confirm_close = true
+reconnect_on_disconnect = false
+reconnect_attempts = 3
+reconnect_delay = 5
+
+# Key bindings (vim-style by default)
+key_quit = "Ctrl+q"
+key_new_tab = "Ctrl+t"
+key_close_tab = "Ctrl+w"
+key_next_tab = "Ctrl+Tab"
+key_prev_tab = "Ctrl+Shift+Tab"
+key_split_horizontal = "Ctrl+h"
+key_split_vertical = "Ctrl+v"
+key_toggle_file_manager = "Ctrl+f"
+key_command_mode = ":"
+key_search = "/"
+
+# Advanced
+ssh_timeout = 30
+sftp_timeout = 60
+keepalive_interval = 60
+log_level = "info"  # debug, info, warn, error
+log_file = "~/.local/share/vis/vis.log"
