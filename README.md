@@ -1,4 +1,4 @@
-# vis
+# visual
 
 Visual SSH terminal + remote desktop. Connects to a remote host over SSH and
 presents a windowed desktop in an SDL2 window: a titled, draggable, resizable
@@ -23,12 +23,12 @@ make install          # installs to $HOME/.local/bin
 ## Usage
 
 ```
-vis user@host[:port]      # direct connect
-vis                       # use default_host from ~/.config/vis/config
-echo user@host | vis      # pipe target in
-vis -r                    # read-only (file write ops hidden)
-vis -s                    # stop a running instance
-vis -h                    # help
+visual user@host[:port]      # direct connect
+visual                       # use default_host from ~/.config/visual/config
+echo user@host | visual      # pipe target in
+visual -r                    # read-only (file write ops hidden)
+visual -s                    # stop a running instance
+visual -h                    # help
 ```
 
 See `config.example` for the full set of knobs.

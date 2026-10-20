@@ -1,23 +1,17 @@
 .Dd October 20, 2026
-.Dt VIS 1
+.Dt VISUAL 1
 .Os PUtils
 .Sh NAME
-.Nm vis ,
 .Nm visual
 .Nd visual SSH terminal with desktop-like experience
 .Sh SYNOPSIS
 .Nm
 .Op Fl s
-.Op Fl h
+.Op Fl H
 .Op Fl r
 .Op Fl c Ar config
-.Nm visual
-.Op Ar same options
+.Op Ar user@host[:port]
 .Sh DESCRIPTION
-.Nm
-and
-.Nm visual
-are the same command.
 .Nm
 connects to a remote SSH server and presents a full-screen terminal
 interface that resembles a desktop environment.
@@ -27,7 +21,7 @@ transfers, multiple tabs, and seamless SFTP integration.
 When invoked without arguments,
 .Nm
 reads its configuration from
-.Pa ~/.config/vis/config
+.Pa ~/.config/visual/config
 and connects to the default host specified there.
 When invoked with piped input, it treats the input as a full SSH command
 and connects accordingly.
@@ -54,7 +48,7 @@ Use an alternate configuration file instead of the default.
 .Sh CONFIGURATION
 .Nm
 looks for its configuration file at
-.Pa ~/.config/vis/config .
+.Pa ~/.config/visual/config .
 If it does not exist, a default configuration is created on first run.
 The configuration file uses a simple
 .Ar key Ns = Ns Ar value
@@ -108,7 +102,7 @@ Refresh interval in seconds (default: 5).
 .It enable_sftp
 Enable SFTP file transfers (default: true).
 .It local_download_dir
-Local directory for downloads (default: ~/Downloads/vis).
+Local directory for downloads (default: ~/Downloads/visual).
 .It remote_upload_dir
 Remote directory for uploads (default: ~).
 .It max_transfer_size
@@ -132,7 +126,7 @@ Delay between reconnects in seconds (default: 5).
 .It log_level
 Log level: "debug", "info", "warn", "error" (default: "info").
 .It log_file
-Log file path (default: ~/.local/share/vis/vis.log).
+Log file path (default: ~/.local/share/visual/visual.log).
 .El
 
 .Ss Key Bindings
@@ -248,20 +242,20 @@ Exit
 .El
 .Sh FILES
 .Bl -tag -width Ds
-.It Pa ~/.config/vis/config
+.It Pa ~/.config/visual/config
 Main configuration file.
-.It Pa ~/.local/share/vis/vis.log
+.It Pa ~/.local/share/visual/visual.log
 Log file (if enabled).
-.It Pa ~/Downloads/vis/
+.It Pa ~/Downloads/visual/
 Default local download directory.
 .El
 .Sh ENVIRONMENT
 .Bl -tag -width XDG_CONFIG_HOME
 .It Ev XDG_CONFIG_HOME
 If set, configuration is read from
-.Pa $XDG_CONFIG_HOME/vis/config
+.Pa $XDG_CONFIG_HOME/visual/config
 instead of
-.Pa ~/.config/vis/config .
+.Pa ~/.config/visual/config .
 .It Ev HOME
 Used to expand tilde in paths.
 .It Ev TERM
@@ -274,29 +268,34 @@ Used for SSH agent authentication.
 exits 0 on success, 1 on configuration or connection error,
 2 on authentication failure, 3 on protocol error.
 .Sh EXAMPLES
-Connect to the default university server:
+Connect to the default host from config:
 .Bd -literal -offset indent
-$ vis
+$ visual
 .Ed
 .Pp
-Connect using a piped SSH command:
+Connect to a specific host:
 .Bd -literal -offset indent
-$ ssh user@server.example.com | vis
+$ visual user@server.example.com
+.Ed
+.Pp
+Pipe the target in:
+.Bd -literal -offset indent
+$ echo user@server.example.com | visual
 .Ed
 .Pp
 Start in read-only mode:
 .Bd -literal -offset indent
-$ vis -r
+$ visual -r
 .Ed
 .Pp
 Stop a running instance and clean history:
 .Bd -literal -offset indent
-$ vis -s -h
+$ visual -s -H
 .Ed
 .Pp
 Use alternate config file:
 .Bd -literal -offset indent
-$ vis -c ~/my-vis-config
+$ visual -c ~/my-visual-config
 .Ed
 .Sh SEE ALSO
 .Xr ssh 1 ,

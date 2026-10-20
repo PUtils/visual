@@ -113,7 +113,7 @@ int vis_sdl_init(vis_state_t *state) {
     state->window_width = 1280;
     state->window_height = 840;
     state->window = SDL_CreateWindow(
-        "vis — remote desktop",
+        "visual — remote desktop",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         state->window_width, state->window_height,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_SHOWN);

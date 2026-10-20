@@ -10,11 +10,11 @@ LDLIBS += $(shell pkg-config --libs libssh2 sdl2 vterm SDL2_ttf) -lpthread
 SRC := $(wildcard src/*.c)
 OBJ := $(SRC:src/%.c=build/%.o)
 
-all: build/vis
+all: build/visual
 
 VTERM_LIBDIR := $(shell pkg-config --variable=libdir vterm)
 
-build/vis: $(OBJ)
+build/visual: $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 	@# Homebrew's libvterm has an install_name pointing at /usr/local even
 	@# on Apple Silicon; rewrite it to the actual libdir so the binary runs.
@@ -28,16 +28,14 @@ build/%.o: src/%.c include/vis.h | build
 build:
 	mkdir -p build
 
-install: build/vis
+install: build/visual
 	install -d $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)
-	install -m 755 build/vis $(DESTDIR)$(BINDIR)/vis
-	ln -sf vis $(DESTDIR)$(BINDIR)/visual
-	install -m 644 man/vis.1 $(DESTDIR)$(MANDIR)/vis.1
-	ln -sf vis.1 $(DESTDIR)$(MANDIR)/visual.1
+	install -m 755 build/visual $(DESTDIR)$(BINDIR)/visual
+	install -m 644 man/visual.1 $(DESTDIR)$(MANDIR)/visual.1
 
 uninstall:
-	rm -f $(DESTDIR)$(BINDIR)/vis $(DESTDIR)$(BINDIR)/visual
-	rm -f $(DESTDIR)$(MANDIR)/vis.1 $(DESTDIR)$(MANDIR)/visual.1
+	rm -f $(DESTDIR)$(BINDIR)/visual
+	rm -f $(DESTDIR)$(MANDIR)/visual.1
 
 clean:
 	rm -rf build

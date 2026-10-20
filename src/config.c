@@ -34,7 +34,7 @@ static void config_set_defaults_desktop(vis_desktop_config_t *desktop) {
     desktop->auto_refresh = true;
     desktop->refresh_interval = 5;
     desktop->enable_sftp = true;
-    snprintf(desktop->local_download_dir, sizeof(desktop->local_download_dir), "~/Downloads/vis");
+    snprintf(desktop->local_download_dir, sizeof(desktop->local_download_dir), "~/Downloads/visual");
     snprintf(desktop->remote_upload_dir, sizeof(desktop->remote_upload_dir), "~");
     desktop->max_transfer_size = 104857600;
 }
@@ -47,7 +47,7 @@ static void config_set_defaults_behavior(vis_behavior_config_t *behavior) {
     behavior->reconnect_attempts = 3;
     behavior->reconnect_delay = 5;
     behavior->log_level = VIS_LOG_INFO;
-    snprintf(behavior->log_file, sizeof(behavior->log_file), "~/.local/share/vis/vis.log");
+    snprintf(behavior->log_file, sizeof(behavior->log_file), "~/.local/share/visual/visual.log");
 }
 
 static void config_set_defaults_keys(vis_keybindings_t *keys) {
@@ -209,14 +209,14 @@ void vis_config_free(vis_config_t *config) {
 char *vis_get_config_path(void) {
     const char *xdg = getenv("XDG_CONFIG_HOME");
     if (xdg) {
-        char *path = malloc(strlen(xdg) + strlen("/vis/config") + 1);
-        snprintf(path, strlen(xdg) + strlen("/vis/config") + 1, "%s/vis/config", xdg);
+        char *path = malloc(strlen(xdg) + strlen("/visual/config") + 1);
+        snprintf(path, strlen(xdg) + strlen("/visual/config") + 1, "%s/visual/config", xdg);
         return path;
     }
     const char *home = getenv("HOME");
-    if (!home) return strdup("vis/config");
-    char *path = malloc(strlen(home) + strlen("/.config/vis/config") + 1);
-    snprintf(path, strlen(home) + strlen("/.config/vis/config") + 1, "%s/.config/vis/config", home);
+    if (!home) return strdup("visual/config");
+    char *path = malloc(strlen(home) + strlen("/.config/visual/config") + 1);
+    snprintf(path, strlen(home) + strlen("/.config/visual/config") + 1, "%s/.config/visual/config", home);
     return path;
 }
 
@@ -226,8 +226,8 @@ char *vis_expand_path(const char *path) {
 
 static void print_usage(const char *prog) {
     fprintf(stderr, "Usage: %s [-s] [-h] [-r] [-c config] [user@host[:port]]\n", prog);
-    fprintf(stderr, "  -s  Stop running vis process and convert to normal SSH\n");
-    fprintf(stderr, "  -H  Clean vis commands from shell history\n");
+    fprintf(stderr, "  -s  Stop running visual process and convert to normal SSH\n");
+    fprintf(stderr, "  -H  Clean visual commands from shell history\n");
     fprintf(stderr, "  -r  Read-only mode\n");
     fprintf(stderr, "  -c  Use alternate config file\n");
     fprintf(stderr, "  -h  Show this help\n");
@@ -313,7 +313,7 @@ static void stop_running_instance(void) {
     char pid_file[VIS_MAX_PATH_LEN];
     const char *home = getenv("HOME");
     if (!home) return;
-    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/vis/vis.pid", home);
+    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/visual/visual.pid", home);
     
     FILE *f = fopen(pid_file, "r");
     if (!f) return;
@@ -331,7 +331,7 @@ void write_pid_file(void) {
     char pid_file[VIS_MAX_PATH_LEN];
     const char *home = getenv("HOME");
     if (!home) return;
-    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/vis/vis.pid", home);
+    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/visual/visual.pid", home);
     
     char *dir = strdup(pid_file);
     char *last_slash = strrchr(dir, '/');
@@ -408,7 +408,7 @@ void vis_clean_history(void) {
     size_t count = 0, capacity = 0;
     char line[4096];
     while (fgets(line, sizeof(line), f)) {
-        if (strstr(line, "vis") || strstr(line, "visual")) continue;
+        if (strstr(line, "visual ") || strcmp(line, "visual\n") == 0) continue;
         if (count >= capacity) {
             capacity = capacity ? capacity * 2 : 16;
             lines = realloc(lines, capacity * sizeof(char *));
@@ -433,6 +433,6 @@ void unlink_pid_file(void) {
     char pid_file[VIS_MAX_PATH_LEN];
     const char *home = getenv("HOME");
     if (!home) return;
-    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/vis/vis.pid", home);
+    snprintf(pid_file, sizeof(pid_file), "%s/.local/share/visual/visual.pid", home);
     unlink(pid_file);
 }

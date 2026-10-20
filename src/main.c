@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
     }
     
     vis_log_init(g_state->config.behavior.log_file, g_state->config.behavior.log_level);
-    vis_log(VIS_LOG_INFO, "vis %s starting", VIS_VERSION);
+    vis_log(VIS_LOG_INFO, "visual %s starting", VIS_VERSION);
     
     write_pid_file();
     setup_signals();

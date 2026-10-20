@@ -1,7 +1,7 @@
-# vis - Visual SSH Terminal Configuration
-# Place this file at ~/.config/vis/config
+# visual - Visual SSH Terminal Configuration
+# Place this file at ~/.config/visual/config
 
-# Default SSH connection (used when running 'vis' without arguments)
+# Default SSH connection (used when running 'visual' without arguments)
 # Format: user@host[:port] or ssh command
 default_host = "user@example.com"
 default_port = 22
@@ -33,7 +33,7 @@ refresh_interval = 5
 
 # File transfer
 enable_sftp = true
-local_download_dir = "~/Downloads/vis"
+local_download_dir = "~/Downloads/visual"
 remote_upload_dir = "~"
 max_transfer_size = 104857600  # 100MB
 
@@ -62,4 +62,4 @@ ssh_timeout = 30
 sftp_timeout = 60
 keepalive_interval = 60
 log_level = "info"  # debug, info, warn, error
-log_file = "~/.local/share/vis/vis.log"
+log_file = "~/.local/share/visual/visual.log"
