@@ -29,6 +29,7 @@ echo user@host | visual      # pipe target in
 visual -r                    # read-only (file write ops hidden)
 visual -s                    # stop a running instance
 visual -h                    # help
+ssh user@host | vis          # "vis" can also be used as a shortned form of the command, it means the same
 ```
 
 See `config.example` for the full set of knobs.
